@@ -1,0 +1,18 @@
+// Identifiants du projet Pécule.
+//
+// 🧑 Action humaine : ne modifie pas ce fichier. Crée à côté `Config/Local.xcconfig`
+// (ignoré par git) avec tes valeurs, par exemple :
+//
+//   PECULE_BUNDLE_ID_PREFIX = com.tonnom
+//   PECULE_DEVELOPMENT_TEAM = ABCDE12345
+//
+// Tout le reste (bundle id, App Group, conteneur iCloud) en découle.
+
+PECULE_BUNDLE_ID_PREFIX = com.example
+PECULE_DEVELOPMENT_TEAM =
+
+#include? "Local.xcconfig"
+
+PECULE_BUNDLE_ID = $(PECULE_BUNDLE_ID_PREFIX).pecule
+PECULE_APP_GROUP = group.$(PECULE_BUNDLE_ID)
+PECULE_CLOUDKIT_CONTAINER = iCloud.$(PECULE_BUNDLE_ID)
