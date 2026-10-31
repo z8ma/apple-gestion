@@ -14,7 +14,7 @@ struct SettingsView: View {
                     SettingsForm(settings: settings)
                 } else {
                     ProgressView()
-                        .task { try? SettingsStore.current(in: context) }
+                        .task { _ = try? SettingsStore.current(in: context) }
                 }
             }
             .navigationTitle("Réglages")

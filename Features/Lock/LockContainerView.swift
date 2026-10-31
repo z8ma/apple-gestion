@@ -1,3 +1,4 @@
+import PeculeCore
 import SwiftData
 import SwiftUI
 
