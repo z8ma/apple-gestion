@@ -96,7 +96,7 @@ jobs:
             GCC_TREAT_WARNINGS_AS_ERRORS=YES \
             > xcodebuild.log 2>&1
           status=$?
-          grep -E "Test run|✘" xcodebuild.log | tail -40
+          grep -E "Test run|Test Suite .*(passed|failed)|Executed [0-9]+ test|✘|\*\* TEST" xcodebuild.log | tail -40
           if [ $status -ne 0 ]; then
             {
               echo "## Erreurs de compilation / tests"

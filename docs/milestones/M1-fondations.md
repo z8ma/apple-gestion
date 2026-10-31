@@ -1,6 +1,6 @@
 # M1 — Fondations
 
-> Branche d'intégration : `jalon/M1-fondations` · Statut : 🧪 code écrit, à compiler et tester sur Mac
+> Branche d'intégration : `jalon/M1-fondations` · Statut : 🧪 code complet, CI verte — recette manuelle sur Mac/iPhone à faire
 
 ## Objectif
 
@@ -21,9 +21,9 @@ Une app utilisable en saisie manuelle, avec le modèle de données complet du bu
 
 - [ ] Projet Xcode avec targets App, Widgets (vide), tests ; App Group configuré ; CloudKit activé. → `feature/M1-projet-xcode`
 - [ ] Toutes les entités de B.6 utiles à M1–M5 créées, conformes aux contraintes CloudKit. → `feature/M1-modele-donnees`
-- [ ] Jeu de catégories par défaut (annexe E.6) créé au premier lancement. → `feature/M1-modele-donnees`
+- [x] Jeu de catégories par défaut (annexe E.6) créé au premier lancement. → `feature/M1-modele-donnees`
 - [ ] Liste des transactions groupée par jour, recherche texte, filtres catégorie/compte/tag. → `feature/M1-transactions`
-- [ ] Split : impossible d'enregistrer si la somme des parts ≠ montant (tests). → `feature/M1-split-remboursement`
+- [x] Split : impossible d'enregistrer si la somme des parts ≠ montant (tests). → `feature/M1-split-remboursement`
 - [x] Calcul de période selon `periodStartDay` couvert par tests (fin de mois, février, années bissextiles). → `feature/M1-calcul-periode`
 - [ ] Multi-sélection : catégoriser, taguer, exclure du budget, supprimer. → `feature/M1-actions-groupees`
 - [ ] Verrouillage biométrique + écran masqué dans le sélecteur d'apps. → `feature/M1-verrouillage`
@@ -60,8 +60,10 @@ fusionné dans `jalon/M1-fondations`.
 
 - ✅ Vérifié dans le conteneur Linux : `PeculeCore` compile sans warning et ses tests passent
   (`cd Core && swift test`), syntaxe de tous les fichiers de l'app (`scripts/swift-parse-check.sh`).
-- 🧪 À vérifier sur Mac (Xcode 26) : compilation de l'app, des widgets et des tests
-  (`PeculeTests`), previews, comportement sur simulateur, Face ID sur appareil réel.
+- ✅ Vérifié en CI macOS (Xcode 26.6, simulateur iPhone 17) : l'app, le widget et les tests
+  compilent **sans aucun warning**, et tous les tests (`PeculeCoreTests` + `PeculeTests`) passent.
+- 🧪 À vérifier sur Mac / iPhone : comportement des écrans, previews, signature avec ton équipe
+  (App Group, CloudKit réel), Face ID sur appareil réel.
 
 ## 🧑 Actions humaines
 
