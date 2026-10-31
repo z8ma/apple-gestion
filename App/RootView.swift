@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 /// Racine de l'app : onglets principaux.

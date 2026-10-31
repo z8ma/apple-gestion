@@ -25,8 +25,10 @@ struct CategoriesListView: View {
         }
     }
 
-    @Query(filter: #Predicate<Category> { $0.parent == nil }, sort: [SortDescriptor(\Category.sortOrder), SortDescriptor(\Category.name)])
-    private var roots: [Category]
+    @Query(sort: Category.displayOrder) private var allCategories: [Category]
+
+    /// Filtre en mémoire (quelques dizaines de catégories) plutôt qu'un #Predicate.
+    private var roots: [Category] { allCategories.filter { $0.parent == nil } }
 
     @State private var scope: Scope = .expense
     @State private var showsArchived = false

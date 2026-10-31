@@ -60,3 +60,12 @@ final class Category {
         parent.map { "\($0.name) › \(name)" } ?? name
     }
 }
+
+extension Category {
+    /// Ordre d'affichage (constante typée : allège le travail du vérificateur de types
+    /// dans les `@Query`).
+    static let displayOrder: [SortDescriptor<Category>] = [
+        SortDescriptor(\Category.sortOrder),
+        SortDescriptor(\Category.name),
+    ]
+}

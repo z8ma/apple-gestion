@@ -11,8 +11,9 @@ struct CategoryEditorView: View {
 
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
-    @Query(filter: #Predicate<Category> { $0.parent == nil && !$0.isArchived }, sort: [SortDescriptor(\Category.sortOrder), SortDescriptor(\Category.name)])
-    private var roots: [Category]
+    @Query(sort: Category.displayOrder) private var allCategories: [Category]
+
+    private var roots: [Category] { allCategories.filter { $0.parent == nil && !$0.isArchived } }
 
     @State private var name = ""
     @State private var symbol = "tag.fill"

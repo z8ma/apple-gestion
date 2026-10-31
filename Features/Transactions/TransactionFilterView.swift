@@ -7,8 +7,7 @@ struct TransactionFilterView: View {
     @Binding var filter: TransactionFilter
 
     @Environment(\.dismiss) private var dismiss
-    @Query(filter: #Predicate<Category> { $0.parent == nil }, sort: [SortDescriptor(\Category.sortOrder), SortDescriptor(\Category.name)])
-    private var roots: [Category]
+    @Query(sort: Category.displayOrder) private var allCategories: [Category]
     @Query(sort: [SortDescriptor(\Account.sortOrder), SortDescriptor(\Account.name)]) private var accounts: [Account]
     @Query(sort: \Tag.name) private var tags: [Tag]
 
@@ -52,6 +51,8 @@ struct TransactionFilterView: View {
             }
         }
     }
+
+    private var roots: [Category] { allCategories.filter { $0.parent == nil } }
 
     private func binding(_ id: UUID, in keyPath: WritableKeyPath<TransactionFilter, Set<UUID>>) -> Binding<Bool> {
         Binding(
