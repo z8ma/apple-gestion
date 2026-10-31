@@ -15,7 +15,7 @@ struct PersistenceTests {
         let context = try makeContext()
         try DefaultDataSeeder.seedIfNeeded(in: context)
         #expect(try context.fetchCount(FetchDescriptor<UserSettings>()) == 1)
-        let categories = try context.fetch(FetchDescriptor<Category>())
+        let categories = try context.fetch(FetchDescriptor<Pecule.Category>())
         #expect(categories.count == DefaultCategories.flattened.count)
         #expect(categories.allSatisfy(\.isSystem))
         let housing = try #require(categories.first { $0.systemKey == "expense.housing" })
@@ -27,7 +27,7 @@ struct PersistenceTests {
         let context = try makeContext()
         try DefaultDataSeeder.seedIfNeeded(in: context)
         try DefaultDataSeeder.seedIfNeeded(in: context)
-        #expect(try context.fetchCount(FetchDescriptor<Category>()) == DefaultCategories.flattened.count)
+        #expect(try context.fetchCount(FetchDescriptor<Pecule.Category>()) == DefaultCategories.flattened.count)
         #expect(try context.fetchCount(FetchDescriptor<UserSettings>()) == 1)
     }
 
@@ -35,18 +35,18 @@ struct PersistenceTests {
     func renamedSystemCategory() throws {
         let context = try makeContext()
         try DefaultDataSeeder.seedIfNeeded(in: context)
-        let rent = try #require(try context.fetch(FetchDescriptor<Category>()).first { $0.systemKey == "expense.housing.rent" })
+        let rent = try #require(try context.fetch(FetchDescriptor<Pecule.Category>()).first { $0.systemKey == "expense.housing.rent" })
         rent.name = "Mon loyer"
         try DefaultDataSeeder.seedIfNeeded(in: context)
-        #expect(try context.fetchCount(FetchDescriptor<Category>()) == DefaultCategories.flattened.count)
+        #expect(try context.fetchCount(FetchDescriptor<Pecule.Category>()) == DefaultCategories.flattened.count)
     }
 
     @Test("Doublons CloudKit : la catégorie la plus ancienne garde les transactions")
     func mergeDuplicates() throws {
         let context = try makeContext()
         try DefaultDataSeeder.seedIfNeeded(in: context)
-        let original = try #require(try context.fetch(FetchDescriptor<Category>()).first { $0.systemKey == "expense.food.groceries" })
-        let duplicate = Category(name: "Courses", symbol: "basket.fill", colorHex: "#3FA34D", kind: .expense)
+        let original = try #require(try context.fetch(FetchDescriptor<Pecule.Category>()).first { $0.systemKey == "expense.food.groceries" })
+        let duplicate = Pecule.Category(name: "Courses", symbol: "basket.fill", colorHex: "#3FA34D", kind: .expense)
         duplicate.isSystem = true
         duplicate.systemKey = "expense.food.groceries"
         duplicate.createdAt = original.createdAt.addingTimeInterval(60)
@@ -58,7 +58,7 @@ struct PersistenceTests {
 
         try DefaultDataSeeder.seedIfNeeded(in: context)
 
-        let groceries = try context.fetch(FetchDescriptor<Category>()).filter { $0.systemKey == "expense.food.groceries" }
+        let groceries = try context.fetch(FetchDescriptor<Pecule.Category>()).filter { $0.systemKey == "expense.food.groceries" }
         #expect(groceries.count == 1)
         #expect(transaction.category?.id == original.id)
     }
