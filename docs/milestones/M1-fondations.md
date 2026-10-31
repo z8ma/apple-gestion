@@ -21,7 +21,7 @@ Une app utilisable en saisie manuelle, avec le modèle de données complet du bu
 
 - [ ] Projet Xcode avec targets App, Widgets (vide), tests ; App Group configuré ; CloudKit activé. → `feature/M1-projet-xcode`
 - [ ] Toutes les entités de B.6 utiles à M1–M5 créées, conformes aux contraintes CloudKit. → `feature/M1-modele-donnees`
-- [x] Jeu de catégories par défaut (annexe E.6) créé au premier lancement. → `feature/M1-modele-donnees`
+- [ ] Jeu de catégories par défaut (annexe E.6) créé au premier lancement. → `feature/M1-modele-donnees`
 - [ ] Liste des transactions groupée par jour, recherche texte, filtres catégorie/compte/tag. → `feature/M1-transactions`
 - [ ] Split : impossible d'enregistrer si la somme des parts ≠ montant (tests). → `feature/M1-split-remboursement`
 - [x] Calcul de période selon `periodStartDay` couvert par tests (fin de mois, février, années bissextiles). → `feature/M1-calcul-periode`
