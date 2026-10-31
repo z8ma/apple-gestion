@@ -17,7 +17,7 @@ struct PersistenceTests {
         #expect(try context.fetchCount(FetchDescriptor<UserSettings>()) == 1)
         let categories = try context.fetch(FetchDescriptor<Pecule.Category>())
         #expect(categories.count == DefaultCategories.flattened.count)
-        #expect(categories.allSatisfy(\.isSystem))
+        #expect(categories.allSatisfy { $0.isSystem })
         let housing = try #require(categories.first { $0.systemKey == "expense.housing" })
         #expect(housing.sortedChildren.map(\.name) == ["Loyer", "Énergie", "Internet & mobile", "Assurance habitation"])
     }
