@@ -24,7 +24,7 @@ Une app utilisable en saisie manuelle, avec le modèle de données complet du bu
 - [ ] Jeu de catégories par défaut (annexe E.6) créé au premier lancement. → `feature/M1-modele-donnees`
 - [ ] Liste des transactions groupée par jour, recherche texte, filtres catégorie/compte/tag. → `feature/M1-transactions`
 - [ ] Split : impossible d'enregistrer si la somme des parts ≠ montant (tests). → `feature/M1-split-remboursement`
-- [ ] Calcul de période selon `periodStartDay` couvert par tests (fin de mois, février, années bissextiles). → `feature/M1-calcul-periode`
+- [x] Calcul de période selon `periodStartDay` couvert par tests (fin de mois, février, années bissextiles). → `feature/M1-calcul-periode`
 - [ ] Multi-sélection : catégoriser, taguer, exclure du budget, supprimer. → `feature/M1-actions-groupees`
 - [ ] Verrouillage biométrique + écran masqué dans le sélecteur d'apps. → `feature/M1-verrouillage`
 - [ ] Menu debug « Données de démo » (6 mois de transactions réalistes). → `feature/M1-donnees-demo`
