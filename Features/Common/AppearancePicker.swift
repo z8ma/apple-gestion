@@ -58,3 +58,12 @@ struct SymbolPicker: View {
         .padding(.vertical, 4)
     }
 }
+
+#Preview {
+    @Previewable @State var hex = "#3FA34D"
+    @Previewable @State var symbol = "cart.fill"
+    Form {
+        Section("Couleur") { ColorHexPicker(hex: $hex) }
+        Section("Icône") { SymbolPicker(symbol: $symbol, colorHex: hex) }
+    }
+}

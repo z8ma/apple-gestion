@@ -227,3 +227,12 @@ extension View {
     NavigationStack { CategoriesListView() }
         .modelContainer(PreviewContainer.make())
 }
+
+#Preview("Sous-catégories") {
+    let container = PreviewContainer.make()
+    let food = PreviewData.category("expense.food", in: container.mainContext)
+    NavigationStack {
+        if let food { SubcategoriesView(parent: food) }
+    }
+    .modelContainer(container)
+}

@@ -242,3 +242,19 @@ struct DemoDataView: View {
         .modelContainer(PreviewContainer.make())
         .environment(AppLockController(isEnabled: false, authenticator: FakeDeviceAuthenticator()))
 }
+
+#Preview("Natures") {
+    let container = PreviewContainer.make()
+    let settings = try? SettingsStore.current(in: container.mainContext)
+    NavigationStack {
+        if let settings { NatureLabelsView(settings: settings) }
+    }
+    .modelContainer(container)
+}
+
+#if DEBUG
+#Preview("Données de démo") {
+    NavigationStack { DemoDataView() }
+        .modelContainer(PreviewContainer.make())
+}
+#endif

@@ -52,3 +52,8 @@ struct BulkTagSheet: View {
         }
     }
 }
+
+#Preview {
+    BulkTagSheet { _ in }
+        .modelContainer(PreviewData.container())
+}

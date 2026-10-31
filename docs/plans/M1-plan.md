@@ -1,6 +1,8 @@
 # M1 — Plan proposé (à valider)
 
-> Statut : **en attente de validation humaine**. Aucune ligne de Swift n'a été écrite (CLAUDE.md, section 0 de la spec).
+> Statut : **validé et réalisé** (feu vert de l'humain : « je compilerai sur Mac »).
+> Choix par défaut retenus : Q1 projet écrit à la main (format dossiers synchronisés), Q2 ADR-007,
+> Q3 ADR-009, Q4 `Config/Local.xcconfig`, Q5 ADR-008, Q6 en attente.
 
 ## Ordre de réalisation proposé
 

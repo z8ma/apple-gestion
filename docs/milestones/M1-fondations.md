@@ -1,6 +1,6 @@
 # M1 — Fondations
 
-> Branche d'intégration : `jalon/M1-fondations` · Statut : ⏳ plan à valider (voir docs/plans/M1-plan.md)
+> Branche d'intégration : `jalon/M1-fondations` · Statut : 🧪 code écrit, à compiler et tester sur Mac
 
 ## Objectif
 
@@ -52,6 +52,16 @@ Une app utilisable en saisie manuelle, avec le modèle de données complet du bu
 - Calculs de budget, enveloppes, alertes, widgets non vides (M4).
 - Analyses, abonnements, prévisionnel, export (M5).
 - Patrimoine (M6).
+
+## État de vérification
+
+Seuls les critères **vérifiés** sont cochés. Le code de toutes les fonctionnalités est écrit et
+fusionné dans `jalon/M1-fondations`.
+
+- ✅ Vérifié dans le conteneur Linux : `PeculeCore` compile sans warning et ses tests passent
+  (`cd Core && swift test`), syntaxe de tous les fichiers de l'app (`scripts/swift-parse-check.sh`).
+- 🧪 À vérifier sur Mac (Xcode 26) : compilation de l'app, des widgets et des tests
+  (`PeculeTests`), previews, comportement sur simulateur, Face ID sur appareil réel.
 
 ## 🧑 Actions humaines
 

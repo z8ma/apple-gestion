@@ -95,3 +95,8 @@ struct TagEditorView: View {
     NavigationStack { TagsListView() }
         .modelContainer(PreviewData.container())
 }
+
+#Preview("Éditeur") {
+    NavigationStack { TagEditorView(tag: nil) }
+        .modelContainer(PreviewContainer.make())
+}

@@ -78,3 +78,12 @@ struct RefundLinkView: View {
         dismiss()
     }
 }
+
+#Preview {
+    let container = PreviewData.container()
+    let refund = (try? container.mainContext.fetch(FetchDescriptor<Transaction>()))?.first { $0.kind == .refund }
+    NavigationStack {
+        if let refund { RefundLinkView(refund: refund) }
+    }
+    .modelContainer(container)
+}
