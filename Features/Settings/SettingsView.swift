@@ -192,10 +192,47 @@ struct SecuritySection: View {
 }
 
 #if DEBUG
-/// Menu debug (complété par feature/M1-donnees-demo).
+/// Menu debug : génération de 6 mois de données de démo, remise à zéro.
 struct DemoDataView: View {
+    @Environment(\.modelContext) private var context
+    @State private var message: String?
+    @State private var isConfirmingErase = false
+
     var body: some View {
-        ContentUnavailableView("Données de démo", systemImage: "wand.and.stars")
+        Form {
+            Section {
+                Button("Générer 6 mois de données", systemImage: "wand.and.stars") {
+                    run {
+                        let summary = try DemoDataImporter.importDemo(into: context)
+                        return String(localized: "\(summary.transactions) transactions et \(summary.accounts) comptes créés.")
+                    }
+                }
+            } footer: {
+                Text("Crée trois comptes (courant, joint à 50 %, Livret A) et des transactions réalistes : charges, salaire, courses, voyage tagué, remboursements, virements, achats à catégoriser.")
+            }
+            Section {
+                Button("Tout effacer", systemImage: "trash", role: .destructive) { isConfirmingErase = true }
+            } footer: {
+                Text("Supprime toutes les données de cet appareil et d'iCloud, puis recrée les catégories par défaut.")
+            }
+            if let message {
+                Section { Text(message).foregroundStyle(.secondary) }
+            }
+        }
+        .navigationTitle("Données de démo")
+        .confirmationDialog("Effacer toutes les données ?", isPresented: $isConfirmingErase, titleVisibility: .visible) {
+            Button("Tout effacer", role: .destructive) {
+                run { try DemoDataImporter.eraseAll(in: context); return String(localized: "Toutes les données ont été effacées.") }
+            }
+        }
+    }
+
+    private func run(_ action: () throws -> String) {
+        do {
+            message = try action()
+        } catch {
+            message = String(localized: "Échec : \(error.localizedDescription)")
+        }
     }
 }
 #endif
