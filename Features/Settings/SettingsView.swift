@@ -149,7 +149,7 @@ struct SecuritySection: View {
 
     var body: some View {
         Section {
-            Toggle(isOn: Binding(get: { settings.lockWithBiometrics }, set: setLock)) {
+            Toggle(isOn: Binding(get: { settings.lockWithBiometrics }, set: { newValue in setLock(newValue) })) {
                 Label {
                     Text("Verrouiller avec \(String(localized: method.label))")
                 } icon: {
