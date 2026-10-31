@@ -140,12 +140,54 @@ struct NatureLabelsView: View {
     }
 }
 
-/// Section Sécurité (complétée par feature/M1-verrouillage).
+/// Verrouillage par Face ID / Touch ID / code.
 struct SecuritySection: View {
     @Bindable var settings: UserSettings
+    @Environment(AppLockController.self) private var lock
+    @Environment(\.modelContext) private var context
+    @State private var isConfirming = false
 
     var body: some View {
-        EmptyView()
+        Section {
+            Toggle(isOn: Binding(get: { settings.lockWithBiometrics }, set: setLock)) {
+                Label {
+                    Text("Verrouiller avec \(String(localized: method.label))")
+                } icon: {
+                    Image(systemName: method.symbol)
+                }
+            }
+            .disabled(method == .unavailable || isConfirming)
+        } header: {
+            Text("Sécurité")
+        } footer: {
+            if method == .unavailable {
+                Text("Configurez un code sur l'iPhone pour activer le verrouillage.")
+            } else {
+                Text("L'app se verrouille quand elle passe en arrière-plan, et son contenu est masqué dans le sélecteur d'apps.")
+            }
+        }
+    }
+
+    private var method: AuthenticationMethod { lock.availableMethod }
+
+    private func setLock(_ enabled: Bool) {
+        guard enabled else {
+            apply(false)
+            return
+        }
+        isConfirming = true
+        Task {
+            let confirmed = await lock.confirmIdentity()
+            isConfirming = false
+            if confirmed { apply(true) }
+        }
+    }
+
+    private func apply(_ enabled: Bool) {
+        settings.lockWithBiometrics = enabled
+        settings.updatedAt = .now
+        try? context.save()
+        lock.handle(.enabledChanged(enabled))
     }
 }
 
@@ -161,4 +203,5 @@ struct DemoDataView: View {
 #Preview {
     SettingsView()
         .modelContainer(PreviewContainer.make())
+        .environment(AppLockController(isEnabled: false, authenticator: FakeDeviceAuthenticator()))
 }

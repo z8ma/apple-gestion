@@ -23,4 +23,5 @@ struct RootView: View {
 #Preview {
     RootView()
         .modelContainer(PreviewData.container())
+        .environment(AppLockController(isEnabled: false, authenticator: FakeDeviceAuthenticator()))
 }
