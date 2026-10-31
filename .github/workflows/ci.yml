@@ -104,6 +104,8 @@ jobs:
               grep -E "(error|warning): " xcodebuild.log | sed "s#$PWD/##" | sort -u | head -150
               echo '```'
             } | tee -a "$GITHUB_STEP_SUMMARY"
+            echo "=== Plantages du compilateur ==="
+            grep -n -B3 -A40 -E "Stack dump|Please submit a bug report|PLEASE submit|Assertion failed|Segmentation fault|failed with a nonzero exit code" xcodebuild.log | grep -vE "^[0-9]+[-:] *-[A-Za-z]" | head -200
             echo "=== Fin du log ==="
             tail -30 xcodebuild.log
           fi
