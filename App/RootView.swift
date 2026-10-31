@@ -13,6 +13,9 @@ struct RootView: View {
             Tab("Comptes", systemImage: "building.columns") {
                 AccountsListView()
             }
+            Tab("Réglages", systemImage: "gearshape") {
+                SettingsView()
+            }
         }
     }
 }
