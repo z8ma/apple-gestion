@@ -25,3 +25,12 @@ support des comptes épargne/investissement, qualité des libellés, sandbox.
 Serverless, gratuit à petite échelle, déploiement simple via wrangler.
 
 ## ADR-006 — Montants en Decimal, signe négatif pour les sorties
+
+## ADR-007 — Logique pure dans le package local `PeculeCore`, modèles SwiftData dans `Shared/`
+*Statut : adopté par défaut au démarrage de M1 (réversible).*
+- `Core/` est un Swift Package (`PeculeCore`, Foundation seule, types valeur `Sendable`).
+  Il se teste avec `swift test`, sans simulateur, en CI macOS et même sous Linux.
+- Les modèles SwiftData et la persistance vivent dans `Shared/` (compilé dans l'app **et**
+  les widgets, store dans l'App Group). Ils délèguent toute règle métier à `PeculeCore`.
+- Écart avec l'arborescence de CLAUDE.md : `Core/Models` et `Core/Persistence` deviennent
+  `Shared/Models` et `Shared/Persistence`, car SwiftData n'est pas « pur ».
