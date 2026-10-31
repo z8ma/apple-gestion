@@ -1,0 +1,32 @@
+# macOS
+.DS_Store
+
+# Xcode
+xcuserdata/
+*.xcuserstate
+DerivedData/
+*.xcresult
+build/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved.bak
+
+# Signature (ne jamais versionner)
+*.p8
+*.p12
+*.mobileprovision
+*.cer
+
+# Backend (Cloudflare Workers)
+node_modules/
+.wrangler/
+.dev.vars
+.dev.vars.*
+.env
+.env.*
+coverage/
+
+# Python
+__pycache__/

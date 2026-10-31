@@ -1,0 +1,116 @@
+name: CI
+
+# Push : seulement main et les branches de jalon (évite des dizaines de runs
+# identiques quand on pousse les branches feature). Les features passent par PR.
+on:
+  push:
+    branches: [main, "jalon/**"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  jalons:
+    name: Jalons & documentation
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tests de l'outil de suivi
+        run: python3 -m unittest discover -s scripts/tests -v
+      - name: Cohérence des jalons
+        run: python3 scripts/jalons.py check
+      - name: Avancement (résumé du run)
+        run: python3 scripts/jalons.py progress >> "$GITHUB_STEP_SUMMARY"
+      - name: Aucun secret versionné
+        run: |
+          if git ls-files | grep -E '(^|/)\.dev\.vars$|\.p8$|\.p12$|\.mobileprovision$'; then
+            echo "::error::Fichier sensible versionné (voir CLAUDE.md, Sécurité)"; exit 1
+          fi
+
+  detect:
+    name: Détection des composants
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      package: ${{ steps.d.outputs.package }}
+      packages: ${{ steps.d.outputs.packages }}
+      xcode: ${{ steps.d.outputs.xcode }}
+      backend: ${{ steps.d.outputs.backend }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: d
+        run: |
+          pkgs=$(git ls-files '*Package.swift' | xargs -r -n1 dirname | sort -u | tr '\n' ' ')
+          echo "packages=$pkgs" >> "$GITHUB_OUTPUT"
+          echo "package=$([ -n "$pkgs" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "xcode=$(git ls-files | grep -q '\.xcodeproj/project\.pbxproj$' && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "backend=$([ -f backend/package.json ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
+  swift-package:
+    name: Swift package (Core, logique pure)
+    needs: detect
+    if: needs.detect.outputs.package == 'true'
+    runs-on: macos-26
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: swift --version
+      - name: Build sans warning + tests (Swift Testing), pour chaque package
+        env:
+          PACKAGES: ${{ needs.detect.outputs.packages }}
+        run: |
+          for dir in $PACKAGES; do
+            echo "::group::$dir"
+            (cd "$dir" && swift build -Xswiftc -warnings-as-errors && swift test)
+            echo "::endgroup::"
+          done
+
+  ios:
+    name: App iOS (build + tests)
+    needs: detect
+    if: needs.detect.outputs.xcode == 'true'
+    runs-on: macos-26
+    timeout-minutes: 45
+    env:
+      # À ajuster quand le projet Xcode existera (feature/M1-projet-xcode).
+      SCHEME: Pecule
+      DESTINATION: "platform=iOS Simulator,name=iPhone 17"
+    steps:
+      - uses: actions/checkout@v4
+      - run: xcodebuild -version
+      - name: Build + tests, warnings = erreurs
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -scheme "$SCHEME" \
+            -destination "$DESTINATION" \
+            CODE_SIGNING_ALLOWED=NO \
+            SWIFT_TREAT_WARNINGS_AS_ERRORS=YES \
+            GCC_TREAT_WARNINGS_AS_ERRORS=YES
+
+  backend:
+    name: Backend Workers (TypeScript)
+    needs: detect
+    if: needs.detect.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck --if-present
+      - run: npm test
