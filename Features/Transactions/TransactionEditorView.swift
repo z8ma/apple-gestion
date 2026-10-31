@@ -47,6 +47,8 @@ struct TransactionEditorView: View {
                 Text("Une transaction exclue reste visible mais ne compte pas dans le budget ni les analyses.")
             }
             if let transaction {
+                splitSection(transaction)
+                refundSection(transaction)
                 infoSection(transaction)
                 Section {
                     Button("Supprimer la transaction", role: .destructive) {
@@ -159,6 +161,60 @@ struct TransactionEditorView: View {
             if !draft.categoryMatchesKind {
                 Text("Cette catégorie ne correspond pas au type d'opération choisi.")
                     .foregroundStyle(.orange)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func splitSection(_ transaction: Transaction) -> some View {
+        if !transaction.isSplitPart {
+            Section {
+                NavigationLink {
+                    SplitEditorView(transaction: transaction)
+                } label: {
+                    Label(transaction.isSplitParent ? "Modifier la répartition" : "Diviser la transaction",
+                          systemImage: "arrow.triangle.branch")
+                }
+                ForEach((transaction.splits ?? []).sorted { $0.createdAt < $1.createdAt }) { part in
+                    HStack {
+                        CategoryBadge(category: part.category, size: 24)
+                        Text(part.category?.fullName ?? String(localized: "À catégoriser"))
+                        Spacer()
+                        AmountText(amount: part.amount, currency: part.currency, kind: part.kind)
+                    }
+                }
+            } footer: {
+                if transaction.isSplitParent {
+                    Text("Seules les parts comptent dans le budget et les analyses.")
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func refundSection(_ transaction: Transaction) -> some View {
+        if transaction.amount > 0 && transaction.kind != .transfer {
+            Section {
+                NavigationLink {
+                    RefundLinkView(refund: transaction)
+                } label: {
+                    if let original = transaction.linkedRefundOf {
+                        LabeledContent("Rembourse", value: original.displayName)
+                    } else {
+                        Label("Marquer comme remboursement de…", systemImage: "arrow.uturn.backward")
+                    }
+                }
+            } footer: {
+                Text("Un remboursement réduit la dépense de la catégorie remboursée.")
+            }
+        }
+        if let refunds = transaction.refunds, !refunds.isEmpty {
+            Section("Remboursée par") {
+                ForEach(refunds) { refund in
+                    LabeledContent(refund.displayName) {
+                        AmountText(amount: refund.amount, currency: refund.currency, kind: .refund)
+                    }
+                }
             }
         }
     }
