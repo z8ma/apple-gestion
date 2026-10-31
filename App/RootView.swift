@@ -1,11 +1,17 @@
 import SwiftUI
 
-/// Racine de l'app : onglets principaux (complétée par les features M1).
+/// Racine de l'app : onglets principaux.
 struct RootView: View {
     var body: some View {
         TabView {
             Tab("Accueil", systemImage: "house") {
                 HomeView()
+            }
+            Tab("Transactions", systemImage: "list.bullet.rectangle") {
+                TransactionsListView()
+            }
+            Tab("Comptes", systemImage: "building.columns") {
+                AccountsListView()
             }
         }
     }
@@ -13,4 +19,5 @@ struct RootView: View {
 
 #Preview {
     RootView()
+        .modelContainer(PreviewData.container())
 }
