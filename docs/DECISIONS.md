@@ -34,3 +34,20 @@ Serverless, gratuit à petite échelle, déploiement simple via wrangler.
   les widgets, store dans l'App Group). Ils délèguent toute règle métier à `PeculeCore`.
 - Écart avec l'arborescence de CLAUDE.md : `Core/Models` et `Core/Persistence` deviennent
   `Shared/Models` et `Shared/Persistence`, car SwiftData n'est pas « pur ».
+
+## ADR-008 — Énumérations persistées en `String` (rawValue)
+*Statut : adopté par défaut (réversible).* Chaque enum de B.6 est stockée dans un champ
+`xxxRaw: String` avec un accesseur typé. Une valeur inconnue (ajoutée par une version plus
+récente de l'app sur un autre appareil) est décodée vers une valeur par défaut au lieu de
+faire échouer la lecture. Les `#Predicate` filtrent sur le champ `Raw`.
+
+## ADR-009 — Le modèle s'appelle `Transaction`, comme dans la spec
+*Statut : adopté par défaut (réversible).* Les types déclarés dans le module de l'app
+masquent `SwiftUI.Transaction` ; StoreKit (M7) sera qualifié `StoreKit.Transaction`.
+
+## ADR-010 — `Category.systemKey` pour dédoublonner les catégories par défaut
+*Statut : adopté par défaut.* Ajout au modèle B.6 : clé stable (ex. `expense.housing.rent`)
+posée sur les catégories système. Sans contrainte d'unicité possible avec CloudKit, deux
+appareils peuvent créer chacun le jeu par défaut avant la première synchro : au lancement,
+les doublons de même `systemKey` sont fusionnés dans le plus ancien (transactions,
+sous-catégories, cibles, règles, enveloppes, abonnements). Le renommage reste libre.
