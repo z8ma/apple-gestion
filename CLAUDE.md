@@ -1,6 +1,8 @@
 # CLAUDE.md — Pécule
 
 ## Contexte
+> Reprise en cours : lire d'abord **docs/HANDOFF.md**.
+
 App iOS de gestion des dépenses perso, conçue pour être ouverte au public plus tard.
 Spec complète : docs/SPEC.md. Jalons : docs/milestones/. Décisions : docs/DECISIONS.md.
 Algorithmes métier : docs/ALGORITHMES.md.
